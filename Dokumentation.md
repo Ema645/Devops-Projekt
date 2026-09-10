@@ -25,3 +25,31 @@
     - `git branch`
 - Wie SSH-Keys erstellt werden.
 - Wie ein Spring-Boot-Projekt erstellt wird.
+
+# Lecture 1 Part 2
+
+## Was wir gemacht haben
+
+- Mit dem Remote-Server per SSH verbunden.
+- Verbindung mit Standard- und eigenen SSH-Key-Dateien ausprobiert.
+- Grundlegende Terminal-Befehle verwendet:
+  - `pwd`
+  - `mkdir`
+  - `cd`
+- Wichtige Git-Befehle nachgelesen:
+  - `git clone`
+  - `git pull`
+  - `git add`
+  - `git commit`
+  - `git push`
+  - `git fetch`
+  - `git branch`
+- Den Editor `vim` ausprobiert.
+
+## Was wir gelernt haben
+
+- Wie man sich per SSH mit einem Remote-Server verbindet.
+- Wie man sich im Terminal bewegt und Ordner erstellt.
+- Wie grundlegende Terminal-Befehle funktionieren.
+- Wofür die wichtigsten Git-Befehle verwendet werden.
+- `vim` ausprobiert.
