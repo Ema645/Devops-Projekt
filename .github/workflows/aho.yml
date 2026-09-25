@@ -22,6 +22,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+
+      - name: Fix workspace permissions
+        run: |
+          docker run --rm \
+            -v "$PWD":/project \
+            bash:5.2 \
+            bash -c "chown -R $(id -u):$(id -g) /project"
+            
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
