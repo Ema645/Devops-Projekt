@@ -29,8 +29,8 @@ jobs:
       # Gradle-Container starten und verfügbare Tasks anzeigen
       - name: Show Gradle tasks
         run: |
-          docker run --rm \
+          docker run --rm -u gradle \
             -v "$PWD:/home/gradle/project" \
             -w /home/gradle/project \
-            gradle:8-jdk21 \
+            gradle:8-jdk17-alpine \
             gradle build
