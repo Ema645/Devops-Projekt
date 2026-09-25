@@ -42,3 +42,7 @@ jobs:
             -w /home/gradle/project \
             gradle:8-jdk17-alpine \
             gradle build
+
+      - name: Build Docker image
+        run: |
+          docker build -t devops-projekt:latest .
