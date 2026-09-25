@@ -45,5 +45,5 @@ jobs:
             -v "$PWD":/home/gradle/project \
             -w /home/gradle/project \
             gradle:jdk17 \
-            ./gradlew build
+            bash ./gradlew build
             
