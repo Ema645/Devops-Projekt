@@ -46,4 +46,7 @@ jobs:
             -w /home/gradle/project \
             gradle:jdk17 \
             bash ./gradlew build
-            
+
+      - name: Build Docker image
+        run: |
+          docker build -t devops-projekt:latest .
