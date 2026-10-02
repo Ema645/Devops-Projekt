@@ -51,7 +51,13 @@ jobs:
 
       - name: Integration test
         run: |
-          sleep 5
+          if curl -f http://localhost:8080/hello; then
+            echo "Integration test successful"
+            exit 0
+          fi
+
+          echo "Endpoint not reachable yet. Waiting 10 seconds..."
+          sleep 10
 
           if curl -f http://localhost:8080/hello; then
             echo "Integration test successful"
