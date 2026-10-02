@@ -49,6 +49,18 @@ jobs:
             -p 8080:8080 \
             devops-projekt:latest
 
+      - name: Integration test
+        run: |
+          sleep 5
+
+          if curl -f http://localhost:8080/hello; then
+            echo "Integration test successful"
+            exit 0
+          else
+            echo "Integration test failed"
+            exit 1
+          fi
+
       - name: Tag Docker image
         run: |
           docker tag devops-projekt:latest \
