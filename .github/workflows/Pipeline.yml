@@ -53,7 +53,7 @@ jobs:
         run: |
           sleep 5
 
-          if curl -f http://localhost:8080/hello; then
+          if curl -f http://localhost:8080/falsch; then
             echo "Integration test successful"
             exit 0
           else
