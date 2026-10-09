@@ -11,6 +11,9 @@ on:
 env:
   IMAGE_NAME: devops-team3
   CONTAINER_NAME: devops-team3
+  REGISTRY: 10.0.40.171:5000
+  SONAR_HOST_URL: http://10.0.40.165:9000
+  SONAR_PROJECT_KEY: Devops-Team3-key
 
 jobs:
   build:
@@ -36,22 +39,35 @@ jobs:
             gradle:8-jdk17-alpine \
             gradle build
 
+      - name: SonarQube analysis
+        run: |
+          docker run --rm -u 1000 \
+            -e SONAR_HOST_URL="$SONAR_HOST_URL" \
+            -e SONAR_TOKEN="${{ secrets.SONAR_TOKEN }}" \
+            -v "$PWD:/usr/src" \
+            sonarsource/sonar-scanner-cli \
+            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+            -Dsonar.sources=src/main/java \
+            -Dsonar.tests=src/test/java \
+            -Dsonar.java.binaries=build/classes/java/main \
+            -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml
+
       - name: Build Docker image
         run: |
-          docker build -t devops-projekt:latest .
+          docker build -t $IMAGE_NAME:latest .
 
       - name: Stop and remove old container
         run: |
-          docker stop devops-projekt || true
-          docker rm devops-projekt || true
+          docker stop $CONTAINER_NAME || true
+          docker rm $CONTAINER_NAME || true
 
       - name: Start container
         run: |
           docker run -d \
-            --name devops-projekt \
+            --name $CONTAINER_NAME \
             --restart unless-stopped \
             -p 8080:8080 \
-            devops-projekt:latest
+            $IMAGE_NAME:latest
 
       - name: Integration test
         run: |
@@ -73,9 +89,10 @@ jobs:
 
       - name: Tag Docker image
         run: |
-          docker tag devops-projekt:latest \
-            10.0.40.171:5000/devops-projekt:latest
+          docker tag $IMAGE_NAME:latest $REGISTRY/$IMAGE_NAME:latest
+          docker tag $IMAGE_NAME:latest $REGISTRY/$IMAGE_NAME:${{ github.sha }}
 
       - name: Push Docker image
         run: |
-          docker push 10.0.40.171:5000/devops-projekt:latest
+          docker push $REGISTRY/$IMAGE_NAME:latest
+          docker push $REGISTRY/$IMAGE_NAME:${{ github.sha }}
