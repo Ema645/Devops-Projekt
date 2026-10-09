@@ -8,6 +8,10 @@ on:
 
   workflow_dispatch:
 
+env:
+  IMAGE_NAME: devops-team3
+  CONTAINER_NAME: devops-team3
+
 jobs:
   build:
     runs-on: self-hosted
