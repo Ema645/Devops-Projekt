@@ -14,6 +14,7 @@ theme:
         name: Switch to light mode
   language: de
 nav:
+  - Home: index.md
   - Lectures:
       - Lecture 1: lecture1.md
       - Lecture 2: lecture2.md
