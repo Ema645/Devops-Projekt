@@ -14,6 +14,8 @@ env:
   REGISTRY: 10.0.40.171:5000
   SONAR_HOST_URL: http://10.0.40.165:9000
   SONAR_PROJECT_KEY: Devops-Team3-key
+  DOCS_NAME: devops-team3-docs
+  DOCS_TAG: 0.0.${{ github.run_number }}
 
 jobs:
   build:
@@ -96,3 +98,31 @@ jobs:
         run: |
           docker push $REGISTRY/$IMAGE_NAME:latest
           docker push $REGISTRY/$IMAGE_NAME:${{ github.sha }}
+
+      - name: Build documentation
+        run: |
+          docker run --rm \
+            -u "$(id -u):$(id -g)" \
+            -v "$PWD/mkdocs":/docs \
+            squidfunk/mkdocs-material build
+
+      - name: Build docs image
+        run: docker build -t $DOCS_NAME:$DOCS_TAG mkdocs
+
+      - name: Stop and remove old docs container
+        run: |
+          docker stop $DOCS_NAME || true
+          docker rm $DOCS_NAME || true
+
+      - name: Deploy docs container
+        run: |
+          docker run -d \
+            --name $DOCS_NAME \
+            --restart unless-stopped \
+            -p 8081:80 \
+            $DOCS_NAME:$DOCS_TAG
+
+      - name: Push docs image to Registry
+        run: |
+          docker tag $DOCS_NAME:$DOCS_TAG $REGISTRY/$DOCS_NAME:$DOCS_TAG
+          docker push $REGISTRY/$DOCS_NAME:$DOCS_TAG

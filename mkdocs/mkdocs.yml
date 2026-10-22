@@ -1,0 +1,23 @@
+site_name: DevOps Team 3 Dokumentation
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  language: de
+nav:
+  - Lectures:
+      - Lecture 1: lecture1.md
+      - Lecture 2: lecture2.md
+      - Lecture 3: lecture3.md
+      - Lecture 4: lecture4.md
+      - Lecture 5: lecture5.md
+
