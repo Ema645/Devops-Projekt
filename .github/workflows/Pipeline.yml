@@ -19,7 +19,7 @@ env:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: [self-hosted, build]
 
     steps:
 
@@ -147,3 +147,43 @@ jobs:
         run: |
           docker tag $DOCS_NAME:$DOCS_TAG $REGISTRY/$DOCS_NAME:$DOCS_TAG
           docker push $REGISTRY/$DOCS_NAME:$DOCS_TAG
+
+  deploy:
+    needs: build
+    runs-on: [self-hosted, deploy]
+
+    steps:
+      - name: Pull images from registry
+        run: |
+          docker pull $REGISTRY/$IMAGE_NAME:${{ github.sha }}
+          docker pull $REGISTRY/$DOCS_NAME:$DOCS_TAG
+
+      - name: Stop and remove old containers
+        run: |
+          docker stop $CONTAINER_NAME $DOCS_NAME || true
+          docker rm $CONTAINER_NAME $DOCS_NAME || true
+
+      - name: Start application container
+        run: |
+          docker run -d \
+            --name $CONTAINER_NAME \
+            --restart always \
+            -p 1831:8080 \
+            $REGISTRY/$IMAGE_NAME:${{ github.sha }}
+
+      - name: Start docs container
+        run: |
+          docker run -d \
+            --name $DOCS_NAME \
+            --restart always \
+            -p 1832:80 \
+            $REGISTRY/$DOCS_NAME:$DOCS_TAG
+
+      - name: Remove old images
+        run: |
+          CURRENT_APP="$REGISTRY/$IMAGE_NAME:${{ github.sha }}"
+          CURRENT_DOCS="$REGISTRY/$DOCS_NAME:$DOCS_TAG"
+          docker images --format '{{.Repository}}:{{.Tag}}' \
+            | grep -E "^$REGISTRY/($IMAGE_NAME|$DOCS_NAME):" \
+            | grep -vx -e "$CURRENT_APP" -e "$CURRENT_DOCS" \
+            | xargs -r docker rmi || true
