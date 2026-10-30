@@ -46,6 +46,8 @@ jobs:
             mkdocs/docs/lecture4.md \
             mkdocs/docs/lecture5.md \
             mkdocs/docs/lecture6.md \
+            mkdocs/docs/lecture7.md \
+            mkdocs/docs/lecture8.md \
             -o mkdocs/docs/documentation.pdf \
             --toc -V lang=de
 
